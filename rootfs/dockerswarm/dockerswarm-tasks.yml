@@ -119,7 +119,7 @@ scrape_configs:
         regex: __meta_dockerswarm_service_label_com_(docker_service_.+)
       - action: labelmap
         regex: __meta_dockerswarm_task_(id|container_id)
-        replacement: docker_task_$1
+        replacement: dockerswarm_task_$1
 
       # ================================================================================
       # Kubernetes compatible relabeling

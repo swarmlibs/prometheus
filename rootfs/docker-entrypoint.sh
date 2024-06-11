@@ -4,11 +4,24 @@
 
 set -e
 
+
 # Docker Swarm service template variables
+#  - DOCKERSWARM_SERVICE_ID={{.Service.ID}}
+#  - DOCKERSWARM_SERVICE_NAME={{.Service.Name}}
 #  - DOCKERSWARM_NODE_ID={{.Node.ID}}
+#  - DOCKERSWARM_NODE_HOSTNAME={{.Node.Hostname}}
+#  - DOCKERSWARM_TASK_ID={{.Task.ID}}
+#  - DOCKERSWARM_TASK_NAME={{.Task.Name}}
+#  - DOCKERSWARM_TASK_SLOT={{.Task.Slot}}
 #  - DOCKERSWARM_STACK_NAMESPACE={{ index .Service.Labels "com.docker.stack.namespace"}}
-DOCKERSWARM_NODE_ID=${DOCKERSWARM_NODE_ID}
-DOCKERSWARM_STACK_NAMESPACE=${DOCKERSWARM_STACK_NAMESPACE}
+export DOCKERSWARM_SERVICE_ID=${DOCKERSWARM_SERVICE_ID}
+export DOCKERSWARM_SERVICE_NAME=${DOCKERSWARM_SERVICE_NAME}
+export DOCKERSWARM_NODE_ID=${DOCKERSWARM_NODE_ID}
+export DOCKERSWARM_NODE_HOSTNAME=${DOCKERSWARM_NODE_HOSTNAME}
+export DOCKERSWARM_TASK_ID=${DOCKERSWARM_TASK_ID}
+export DOCKERSWARM_TASK_NAME=${DOCKERSWARM_TASK_NAME}
+export DOCKERSWARM_TASK_SLOT=${DOCKERSWARM_TASK_SLOT}
+export DOCKERSWARM_STACK_NAMESPACE=${DOCKERSWARM_STACK_NAMESPACE}
 
 # Prometheus configuration file.
 PROMETHEUS_TSDB_PATH=${PROMETHEUS_TSDB_PATH:-"/prometheus/data"}
@@ -60,6 +73,35 @@ global:
 # Load scrape configs from this directory.
 scrape_config_files:
   - "/dockerswarm/*"
+
+# Make Prometheus scrape itself for metrics.
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5m
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/server.json
+EOF
+
+echo "==> Generating the Prometheus self-discovery configuration file..."
+cat <<EOF >"/etc/prometheus/server.json"
+[
+  {
+    "targets": [
+      "$HOSTNAME:9090"
+    ],
+    "labels": {
+      "dockerswarm_service_id": "${DOCKERSWARM_SERVICE_ID}",
+      "dockerswarm_service_name": "${DOCKERSWARM_SERVICE_NAME}",
+      "dockerswarm_node_id": "${DOCKERSWARM_NODE_ID}",
+      "dockerswarm_node_hostname": "${DOCKERSWARM_NODE_HOSTNAME}",
+      "dockerswarm_task_id": "${DOCKERSWARM_TASK_ID}",
+      "dockerswarm_task_name": "${DOCKERSWARM_TASK_NAME}",
+      "dockerswarm_task_slot": "${DOCKERSWARM_TASK_SLOT}",
+      "dockerswarm_stack_namespace": "${DOCKERSWARM_STACK_NAMESPACE}"
+    }
+  }
+]
 EOF
 
 # If the user is trying to run Prometheus directly with some arguments, then
