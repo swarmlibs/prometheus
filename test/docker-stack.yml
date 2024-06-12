@@ -32,7 +32,7 @@ services:
   # ====================================================
 
   grafana:
-    image: swarmlibs/grafana:main
+    image: swarmlibs/grafana:local
     deploy:
       replicas: 1
       resources: *x-exporter-resources-constraints
@@ -41,10 +41,6 @@ services:
         io.prometheus.job_name: "grafana"
         io.prometheus.scrape_port: "3000"
     logging: *x-default-logging
-    environment:
-      - GF_SECURITY_ADMIN_USER=grafana
-      - GF_SECURITY_ADMIN_PASSWORD=grafana
-      - GF_USERS_ALLOW_SIGN_UP=false
     ports:
       - published: 3000
         target: 3000
@@ -84,7 +80,6 @@ services:
     ports:
       - published: 9090
         target: 9090
-        mode: host
     hostname: prometheus.{{.Node.ID}}.cluster.local
     networks:
       dockerswarm_metrics:
@@ -111,9 +106,6 @@ services:
         io.prometheus.scrape_port: "9115"
         io.prometheus.dockerswarm-services.should_be_probed: "false"
     logging: *x-default-logging
-    ports:
-      - published: 9115
-        target: 9115
     hostname: blackbox-exporter.svc.cluster.local
     networks:
       dockerswarm_metrics:
@@ -134,10 +126,10 @@ services:
         io.prometheus.dockerswarm-tasks.should_be_scraped: "false"
         io.prometheus.dockerswarm-services.should_be_probed: "false"
     logging: *x-default-logging
-    ports:
-      - published: 9100
-        target: 9100
-        mode: host
+    # ports:
+    #   - published: 9100
+    #     target: 9100
+    #     mode: host
     networks:
       prometheus_exporter:
     hostname: node-exporter.{{.Node.ID}}.cluster.local
@@ -163,10 +155,10 @@ services:
         io.prometheus.dockerswarm-tasks.should_be_scraped: "false"
         io.prometheus.dockerswarm-services.should_be_probed: "false"
     logging: *x-default-logging
-    ports:
-      - published: 8080
-        target: 8080
-        mode: host
+    # ports:
+    #   - published: 8080
+    #     target: 8080
+    #     mode: host
     networks:
       prometheus_exporter:
     hostname: cadvisor.{{.Node.ID}}.cluster.local

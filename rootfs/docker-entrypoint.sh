@@ -4,7 +4,6 @@
 
 set -e
 
-
 # Docker Swarm service template variables
 #  - DOCKERSWARM_SERVICE_ID={{.Service.ID}}
 #  - DOCKERSWARM_SERVICE_NAME={{.Service.Name}}
