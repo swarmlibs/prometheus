@@ -23,7 +23,7 @@ networks:
   dockerswarm_metrics:
     name: dockerswarm_metrics
     external: true
-  prometheus_exporter:
+  prometheus_exporters:
     name: prometheus_exporter
     external: true
 
@@ -49,6 +49,7 @@ services:
         target: 3000
     networks:
       dockerswarm_ingress:
+      dockerswarm_metrics:
     # volumes:
     #   - grafana-data:/var/lib/grafana
 
@@ -87,7 +88,7 @@ services:
     networks:
       dockerswarm_ingress:
       dockerswarm_metrics:
-      prometheus_exporter:
+      prometheus_exporters:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -115,7 +116,7 @@ services:
     networks:
       dockerswarm_ingress:
       dockerswarm_metrics:
-      prometheus_exporter:
+      prometheus_exporters:
 
   # ====================================================
   # Node exporter
@@ -137,7 +138,7 @@ services:
         target: 9100
         mode: host
     networks:
-      prometheus_exporter:
+      prometheus_exporters:
     hostname: node-exporter.{{.Node.ID}}.cluster.local
     volumes:
       - type: bind
@@ -166,7 +167,7 @@ services:
         target: 8080
         mode: host
     networks:
-      prometheus_exporter:
+      prometheus_exporters:
     hostname: cadvisor.{{.Node.ID}}.cluster.local
     volumes:
       - type: bind
