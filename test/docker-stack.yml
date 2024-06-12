@@ -47,6 +47,7 @@ services:
     ports:
       - published: 3000
         target: 3000
+    hostname: grafana.svc.cluster.local
     networks:
       dockerswarm_ingress:
       dockerswarm_metrics:
