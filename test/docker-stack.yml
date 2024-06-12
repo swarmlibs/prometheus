@@ -51,7 +51,8 @@ services:
     networks:
       dockerswarm_metrics:
     # volumes:
-      # - grafana-data:/grafana/data
+    #   - grafana-data:/var/lib/grafana
+
 
   # ====================================================
   # Prometheus
