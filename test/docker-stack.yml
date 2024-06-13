@@ -71,7 +71,7 @@ services:
       labels:
         io.prometheus.role: "prometheus"
         io.prometheus.dockerswarm-tasks.should_be_scraped: "false"
-        io.prometheus.dockerswarm-ingress.should_be_probed: "false"
+        io.prometheus.dockerswarm-services.should_be_probed: "false"
     logging: *x-default-logging
     environment:
       - DOCKERSWARM_SERVICE_ID={{.Service.ID}}
@@ -111,7 +111,7 @@ services:
         io.prometheus.enabled: "true"
         io.prometheus.job_name: "blackbox-exporter"
         io.prometheus.scrape_port: "9115"
-        io.prometheus.dockerswarm-ingress.should_be_probed: "false"
+        io.prometheus.dockerswarm-services.should_be_probed: "false"
     logging: *x-default-logging
     hostname: blackbox-exporter.svc.cluster.local
     networks:
@@ -132,7 +132,7 @@ services:
       labels:
         io.prometheus.role: "node-exporter"
         io.prometheus.dockerswarm-tasks.should_be_scraped: "false"
-        io.prometheus.dockerswarm-ingress.should_be_probed: "false"
+        io.prometheus.dockerswarm-services.should_be_probed: "false"
     logging: *x-default-logging
     ports:
       - published: 9100
@@ -161,7 +161,7 @@ services:
       labels:
         io.prometheus.role: "cadvisor"
         io.prometheus.dockerswarm-tasks.should_be_scraped: "false"
-        io.prometheus.dockerswarm-ingress.should_be_probed: "false"
+        io.prometheus.dockerswarm-services.should_be_probed: "false"
     logging: *x-default-logging
     ports:
       - published: 8080

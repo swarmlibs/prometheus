@@ -7,10 +7,10 @@
 # io.prometheus.probe_enabled=<true|false>
 # io.prometheus.probe_disabled=<true|false>
 # 
-# io.prometheus.dockerswarm-ingress.should_be_probed=<true|false>
+# io.prometheus.dockerswarm-services.should_be_probed=<true|false>
 scrape_configs:
 
-  - job_name: 'dockerswarm-ingress'
+  - job_name: 'dockerswarm-services-endpoints-ingress'
     scrape_interval: 15s
 
     metrics_path: /probe
@@ -27,9 +27,9 @@ scrape_configs:
       # Keep or drop targets with the following rules
       # ================================================================================
 
-      # io.prometheus.dockerswarm-ingress.should_be_probed=<true|false>
+      # io.prometheus.dockerswarm-services.should_be_probed=<true|false>
       - source_labels:
-        - __meta_dockerswarm_service_label_io_prometheus_dockerswarm_ingress_should_be_probed
+        - __meta_dockerswarm_service_label_io_prometheus_dockerswarm_services_should_be_probed
         regex: 'false'
         action: drop
 
