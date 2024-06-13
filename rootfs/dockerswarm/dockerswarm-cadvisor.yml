@@ -30,13 +30,12 @@ scrape_configs:
         regex: __meta_dockerswarm_(node_(?:id|hostname))
 
     metric_relabel_configs:
-      # Set "container" to the Docker Swarm's Task Name of the target container
+      # Set "task" label to "<service_name>_<task_slot>
       - source_labels:
         - container_label_com_docker_swarm_service_name
-        - container_label_com_docker_swarm_service_id
-        - container_label_com_docker_swarm_task_id
-        target_label: container
+        - container_label_com_docker_swarm_task_slot
         separator: '.'
+        target_label: task
 
       # ================================================================================
       # Label mapping
@@ -57,10 +56,13 @@ scrape_configs:
 
       # Set Kubernetes's Deployment with "com.docker.stack.namespace" label
       - source_labels:
-        - container_label_com_docker_stack_namespace
+        - container_label_com_docker_swarm_service_name
         target_label: deployment
 
       # Set Kubernetes's Pod Name with Docker Swarm's Service Name
       - source_labels:
         - container_label_com_docker_swarm_service_name
+        - container_label_com_docker_swarm_service_id
+        - container_label_com_docker_swarm_task_id
         target_label: pod
+        separator: '.'
