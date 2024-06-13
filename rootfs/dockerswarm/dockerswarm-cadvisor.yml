@@ -16,10 +16,10 @@ scrape_configs:
         target_label: __address__
         replacement: cadvisor.$1.cluster.local:8080
 
-      # Set hostname as instance label
       - source_labels:
         - __meta_dockerswarm_node_address
         target_label: instance
+        replacement: $1:8080
 
       # ================================================================================
       # Label mapping
