@@ -20,9 +20,9 @@ scrape_configs:
         replacement: $1:9323
 
       # Set hostname as instance label
-      - source_labels:
-        - __meta_dockerswarm_node_address
-        target_label: instance
+      # - source_labels:
+      #   - __meta_dockerswarm_node_address
+      #   target_label: instance
 
       # ================================================================================
       # Label mapping
@@ -49,6 +49,7 @@ scrape_configs:
       - source_labels:
         - __meta_dockerswarm_node_address
         target_label: instance
+        replacement: $1:9100
 
       # ================================================================================
       # Label mapping
