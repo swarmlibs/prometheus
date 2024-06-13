@@ -32,8 +32,11 @@ scrape_configs:
     metric_relabel_configs:
       # Set "container" to the Docker Swarm's Task Name of the target container
       - source_labels:
-        - name
+        - container_label_com_docker_swarm_service_name
+        - container_label_com_docker_swarm_service_id
+        - container_label_com_docker_swarm_task_id
         target_label: container
+        separator: '.'
 
       # ================================================================================
       # Label mapping

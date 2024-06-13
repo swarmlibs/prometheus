@@ -117,7 +117,9 @@ scrape_configs:
       # Set "container" label to "__meta_dockerswarm_task_container_id"
       - action: replace
         source_labels:
-        - __meta_dockerswarm_task_container_id
+        - __meta_dockerswarm_service_name
+        - __meta_dockerswarm_service_id
+        - __meta_dockerswarm_task_id
         target_label: container
         separator: '.'
 
