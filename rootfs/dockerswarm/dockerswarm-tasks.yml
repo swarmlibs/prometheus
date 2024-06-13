@@ -128,6 +128,10 @@ scrape_configs:
       - action: labelmap
         regex: __meta_(dockerswarm_task_.+)
 
+      # Drop extra labels
+      - action: labeldrop
+        regex: dockerswarm_service_label_com_(docker_stack_.+)
+
       # ================================================================================
       # Kubernetes compatible relabeling
       # - namespace
