@@ -64,6 +64,13 @@ scrape_configs:
 
       # io.prometheus.scrape_port=<port>
       - source_labels:
+        - __meta_dockerswarm_service_label_io_prometheus_scrape_port
+        - __address__
+        target_label: __meta_dockerswarm_service_label_io_prometheus_scrape_port
+        separator: ';'
+        regex: (\d+);(?:[^:]+)(?::(\d+))?
+        replacement: $1
+      - source_labels:
         - __address__
         - __meta_dockerswarm_service_label_io_prometheus_scrape_port
         target_label: __address__
