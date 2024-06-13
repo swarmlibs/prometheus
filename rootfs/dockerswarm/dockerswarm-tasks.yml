@@ -126,7 +126,7 @@ scrape_configs:
       - action: labelmap
         regex: __meta_dockerswarm_service_label_com_(docker_service_.+)
       - action: labelmap
-        regex: __meta_dockerswarm_task_(id|container_id)
+        regex: __meta_dockerswarm_task_(.+)
         replacement: dockerswarm_task_$1
 
       # ================================================================================
