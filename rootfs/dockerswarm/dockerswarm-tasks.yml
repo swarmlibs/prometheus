@@ -95,9 +95,9 @@ scrape_configs:
         replacement: __param_$1
 
       # Set "instance" label to Node Hostname
-      - source_labels:
-        - __meta_dockerswarm_node_address
-        target_label: instance
+      # - source_labels:
+      #   - __meta_dockerswarm_node_address
+      #   target_label: instance
 
       # Set "job" label to Docker Swarm's Service Name combined with "namespace" labels
       # e.g. <com.docker.stack.namespace>/<io.prometheus.job_name>
