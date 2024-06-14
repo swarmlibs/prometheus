@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://json.schemastore.org/prometheus.json
+#
 # Scrape config for Docker Swarm Nodes
 # 
 # The Docker Engine metrics are required to be configured in the daemon.json file for Prometheus to scrape them.
