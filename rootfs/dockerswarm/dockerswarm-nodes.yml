@@ -6,7 +6,6 @@
 # This configuration also includes a job to scrape the Node Exporter metrics that run on each node.
 scrape_configs:
   - job_name: 'dockerswarm/nodes'
-    scrape_interval: 15s
 
     dockerswarm_sd_configs:
       - host: unix:///var/run/docker.sock

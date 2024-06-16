@@ -91,7 +91,6 @@ scrape_config_files:
 # Make Prometheus scrape itself for metrics.
 scrape_configs:
   - job_name: 'prometheus'
-    scrape_interval: 15s
     file_sd_configs:
       - files:
         - /etc/prometheus/server.json
