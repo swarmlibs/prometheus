@@ -1,9 +1,9 @@
-docker-stack-name = prometheus_test
+docker-stack-name = test_prometheus
 
 it:
-	@echo "make [make|remove|clean|reset] docker-stack-name=$(docker-stack-name)"
+	@echo "make [deploy|remove|clean|reset] docker-stack-name=$(docker-stack-name)"
 
-make:
+deploy:
 	docker network create --scope=swarm --driver=overlay --attachable dockerswarm_ingress || true
 	docker network create --scope=swarm --driver=overlay --attachable dockerswarm_metrics || true
 	docker network create --scope=swarm --driver=overlay --attachable prometheus_exporters || true
@@ -16,4 +16,4 @@ clean:
 	@sleep 10
 	docker volume ls -q | grep $(docker-stack-name) | xargs docker volume rm
 
-reset: remove clean make
+reset: remove clean deploy
