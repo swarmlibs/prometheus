@@ -13,7 +13,6 @@ x-exporter-resources-constraints: &x-exporter-resources-constraints
     memory: 64M
 
 volumes:
-  grafana-data:
   prometheus-data:
 
 networks:
@@ -24,36 +23,10 @@ networks:
     name: dockerswarm_metrics
     external: true
   prometheus_exporters:
-    name: prometheus_exporter
+    name: prometheus_exporters
     external: true
 
 services:
-
-  # ====================================================
-  # Grafana Dashboard
-  # https://github.com/grafana/grafana
-  # ====================================================
-
-  grafana:
-    image: swarmlibs/grafana:local
-    deploy:
-      replicas: 1
-      resources: *x-exporter-resources-constraints
-      labels:
-        io.prometheus.enabled: "true"
-        io.prometheus.job_name: "grafana"
-        io.prometheus.scrape_port: "3000"
-    logging: *x-default-logging
-    ports:
-      - published: 3000
-        target: 3000
-    hostname: grafana.svc.cluster.local
-    networks:
-      dockerswarm_ingress:
-      dockerswarm_metrics:
-    # volumes:
-    #   - grafana-data:/var/lib/grafana
-
 
   # ====================================================
   # Prometheus
@@ -94,7 +67,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      # - prometheus-data:/prometheus/data
+      - prometheus-data:/prometheus/data
 
   # ====================================================
   # Blackbox prober exporter
