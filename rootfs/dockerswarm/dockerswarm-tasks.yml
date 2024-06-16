@@ -14,7 +14,7 @@
 # 
 # - io.prometheus.dockerswarm-tasks.should_be_scraped=<true|false>
 scrape_configs:
-  - job_name: 'dockerswarm-tasks-replicated'
+  - job_name: 'dockerswarm/tasks/replicated'
     scrape_interval: 15s
 
     dockerswarm_sd_configs:
@@ -172,7 +172,7 @@ scrape_configs:
         separator: '.'
 
 
-  - job_name: 'dockerswarm-tasks-global'
+  - job_name: 'dockerswarm/tasks/global'
     scrape_interval: 15s
 
     dockerswarm_sd_configs:
