@@ -32,18 +32,35 @@ scrape_configs:
         regex: __meta_dockerswarm_(node_(?:id|hostname))
 
     metric_relabel_configs:
-      # Set "task" label to "<service_name>_<task_slot>
-      - source_labels:
-        - container_label_com_docker_swarm_service_name
-        - container_label_com_docker_swarm_task_slot
-        separator: '.'
-        target_label: task
-
       # ================================================================================
       # Label mapping
       # ================================================================================
       - action: labelmap
         regex: container_label_com_(docker_.*)
+
+      # Rename labels docker_swarm_(.+) to dockerswarm_$1
+      # This is useful for compatibility with "dockerswarm-tasks.yml" relabeling
+      - action: labelmap
+        regex: docker_swarm_(.+)
+        replacement: dockerswarm_$1
+      - action: labeldrop
+        regex: (docker_swarm_.+)
+
+      # Drop extra labels
+      - action: labeldrop
+        regex: container_label_com_(docker_swarm_.+)
+
+      # ================================================================================
+      # Docker Swarm compatible relabeling
+      # - dockerswarm_task_name
+      # ================================================================================
+
+      # Set "task" label to "<service_name>_<task_slot>
+      - source_labels:
+        - dockerswarm_task_name
+        target_label: task
+        regex: (.+)\.(.+)\.(.+)
+        replacement: $1.$2
 
       # ================================================================================
       # Kubernetes compatible relabeling
@@ -63,8 +80,6 @@ scrape_configs:
 
       # Set Kubernetes's Pod Name with Docker Swarm's Service Name
       - source_labels:
-        - container_label_com_docker_swarm_service_name
-        - container_label_com_docker_swarm_service_id
-        - container_label_com_docker_swarm_task_id
+        - dockerswarm_task_name
         target_label: pod
-        separator: '.'
+        regex: (.*)
