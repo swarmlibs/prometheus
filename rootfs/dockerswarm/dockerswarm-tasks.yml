@@ -115,7 +115,7 @@ scrape_configs:
         separator: '/'
         regex: (.*\/global\/.+\/.+)
 
-      # Set "job" label to Docker Swarm's Service Name combined with "namespace" labels
+      # Override "job" label to Docker Swarm's Service Name combined with "namespace" labels
       # e.g. <com.docker.stack.namespace>/<io.prometheus.job_name>
       - source_labels:
         - __meta_dockerswarm_service_label_com_docker_stack_namespace
@@ -147,6 +147,7 @@ scrape_configs:
       # ================================================================================
       # Label mapping
       # ================================================================================
+
       - action: labelmap
         regex: __meta_dockerswarm_service_label_com_(docker_stack_.+)
       - action: labelmap
@@ -164,6 +165,7 @@ scrape_configs:
       # - deployment
       # - pod
       # ================================================================================
+
       # Set Kubernetes's Namespace with "com.docker.stack.namespace" label
       - source_labels:
         - __meta_dockerswarm_service_label_com_docker_stack_namespace
