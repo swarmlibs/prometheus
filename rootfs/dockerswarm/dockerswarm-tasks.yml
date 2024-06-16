@@ -147,11 +147,11 @@ scrape_configs:
       # - dockerswarm_task_name
       # ================================================================================
 
-      # Fix "dockerswarm_task_slot" label for global tasks
+      # Fix "__meta_dockerswarm_task_slot" label for global tasks
       - source_labels:
         - __meta_dockerswarm_service_mode
         - __meta_dockerswarm_node_id
-        target_label: dockerswarm_task_slot
+        target_label: __meta_dockerswarm_task_slot
         separator: '/'
         regex: global/(.*)
 
