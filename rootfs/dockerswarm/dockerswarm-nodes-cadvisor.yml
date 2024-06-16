@@ -40,10 +40,8 @@ scrape_configs:
       # Rename labels docker_swarm_(.+) to dockerswarm_$1
       # This is useful for compatibility with "dockerswarm-tasks.yml" relabeling
       - action: labelmap
-        regex: docker_swarm_(.+)
+        regex: container_label_com_docker_swarm_(.+)
         replacement: dockerswarm_$1
-      - action: labeldrop
-        regex: (docker_swarm_.+)
 
       # ================================================================================
       # Docker Swarm compatible relabeling
