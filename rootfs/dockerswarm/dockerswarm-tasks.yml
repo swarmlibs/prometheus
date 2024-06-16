@@ -104,7 +104,7 @@ scrape_configs:
         - __meta_dockerswarm_task_slot
         target_label: job_id
         separator: '/'
-        regex: (.*\/replicated\/.+\/.+)
+        regex: (.*/replicated/.+/.+)
       # If service is global, set "job_id" label to "<job>/<service_name>/<node_id>"
       - source_labels:
         - job
@@ -113,7 +113,7 @@ scrape_configs:
         - __meta_dockerswarm_node_id
         target_label: job_id
         separator: '/'
-        regex: (.*\/global\/.+\/.+)
+        regex: (.*/global/.+/.+)
 
       # Override "job" label to Docker Swarm's Service Name combined with "namespace" labels
       # e.g. <com.docker.stack.namespace>/<io.prometheus.job_name>
@@ -122,23 +122,6 @@ scrape_configs:
         - __meta_dockerswarm_service_label_io_prometheus_job_name
         target_label: job
         separator: /
-
-      # If service is replicated, set "task" label to "<service_name>_<task_slot>"
-      - source_labels:
-        - __meta_dockerswarm_service_mode
-        - __meta_dockerswarm_service_name
-        - __meta_dockerswarm_task_slot
-        target_label: task
-        separator: '_'
-        regex: replicated_(.*)
-      # If service is global, set "task" label to "<service_name>_<node_id>"
-      - source_labels:
-        - __meta_dockerswarm_service_mode
-        - __meta_dockerswarm_service_name
-        - __meta_dockerswarm_node_id
-        target_label: task
-        separator: '_'
-        regex: global_(.*)
 
       # Drop all labels starting with "io.prometheus."
       - action: labeldrop
@@ -158,6 +141,36 @@ scrape_configs:
       # Drop extra labels
       - action: labeldrop
         regex: dockerswarm_service_label_com_(docker_stack_.+)
+
+      # ================================================================================
+      # Docker Swarm compatible relabeling
+      # - dockerswarm_task_name
+      # ================================================================================
+
+      # Fix "dockerswarm_task_slot" label for global tasks
+      - source_labels:
+        - __meta_dockerswarm_service_mode
+        - __meta_dockerswarm_node_id
+        target_label: dockerswarm_task_slot
+        separator: '/'
+        regex: global/(.*)
+
+      # Set "task" label to "<service_name>_<task_slot>"
+      - source_labels:
+        - __meta_dockerswarm_service_mode
+        - __meta_dockerswarm_service_name
+        - __meta_dockerswarm_task_slot
+        target_label: task
+        separator: '_'
+
+      # Set "dockerswarm_task_name" label to "<service_name>.<task_slot>.<task_id>"
+      - source_labels:
+        - __meta_dockerswarm_service_mode
+        - __meta_dockerswarm_service_name
+        - __meta_dockerswarm_task_slot
+        - __meta_dockerswarm_task_id
+        target_label: dockerswarm_task_name
+        separator: '.'
 
       # ================================================================================
       # Kubernetes compatible relabeling
