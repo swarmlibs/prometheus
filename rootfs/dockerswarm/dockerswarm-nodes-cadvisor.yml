@@ -42,6 +42,8 @@ scrape_configs:
       - action: labelmap
         regex: container_label_com_docker_swarm_(.+)
         replacement: dockerswarm_$1
+      - action: labeldrop
+        regex: (^docker_swarm_.+)
 
       # ================================================================================
       # Docker Swarm compatible relabeling
