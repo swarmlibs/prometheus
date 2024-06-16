@@ -104,7 +104,7 @@ scrape_configs:
         - __meta_dockerswarm_task_slot
         target_label: id
         separator: '/'
-        regex: (.*/replicated/.+/.+)
+        regex: (.*\/replicated\/.+\/.+)
       # If service is global, set "job_id" label to "<job>/<service_name>/<node_id>"
       - source_labels:
         - job
@@ -113,7 +113,7 @@ scrape_configs:
         - __meta_dockerswarm_node_id
         target_label: id
         separator: '/'
-        regex: (.*/global/.+/.+)
+        regex: (.*\/global\/.+\/.+)
 
       # Override "job" label to Docker Swarm's Service Name combined with "namespace" labels
       # e.g. <com.docker.stack.namespace>/<io.prometheus.job_name>
@@ -153,7 +153,7 @@ scrape_configs:
         - __meta_dockerswarm_node_id
         target_label: __meta_dockerswarm_task_slot
         separator: '/'
-        regex: global/(.*)
+        regex: global\/(.*)
 
       # Set "task" label to "<service_name>_<task_slot>"
       - source_labels:
