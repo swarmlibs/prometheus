@@ -33,3 +33,9 @@ scrape_configs:
         regex: __meta_(dockerswarm_node_.+)
       - action: labelmap
         regex: __meta_dockerswarm_(node_(?:id|hostname))
+
+      # Set node_name label to node hostname
+      # This is useful for providing compatibility with the swarmprom dashboards
+      - source_labels:
+          - __meta_dockerswarm_node_hostname
+        target_label: node_name
