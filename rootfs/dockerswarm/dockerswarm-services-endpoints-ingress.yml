@@ -24,9 +24,9 @@ scrape_configs:
         role: services
 
     relabel_configs:
-      # ================================================================================
-      # Add custom labels
-      # ================================================================================
+      - target_label: job
+        replacement: dockerswarm/services-endpoints
+
       - target_label: module
         replacement: tcp_connect
 
@@ -75,6 +75,7 @@ scrape_configs:
       # If service is replicated, set "job_id" label to "<job>/<service_name>/<task_slot>"
       - source_labels:
         - job
+        - __meta_dockerswarm_service_endpoint_port_publish_mode
         - __meta_dockerswarm_service_mode
         - __meta_dockerswarm_service_name
         target_label: id

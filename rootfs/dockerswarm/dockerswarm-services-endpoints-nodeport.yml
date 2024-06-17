@@ -12,7 +12,7 @@
 # io.prometheus.dockerswarm-services.should_be_probed=<true|false>
 scrape_configs:
 
-  - job_name: 'dockerswarm/services-endpoints/nodeport'
+  - job_name: 'dockerswarm/services-endpoints/host'
 
     metrics_path: /probe
     params:
@@ -27,10 +27,9 @@ scrape_configs:
             values: [ running ]
 
     relabel_configs:
+      - target_label: job
+        replacement: dockerswarm/services-endpoints
 
-      # ================================================================================
-      # Add custom labels
-      # ================================================================================
       - target_label: module
         replacement: tcp_connect
 
@@ -86,6 +85,7 @@ scrape_configs:
       # If service is replicated, set "job_id" label to "<job>/<service_name>/<task_slot>"
       - source_labels:
         - job
+        - __meta_dockerswarm_task_port_publish_mode
         - __meta_dockerswarm_service_mode
         - __meta_dockerswarm_service_name
         - __meta_dockerswarm_task_slot
