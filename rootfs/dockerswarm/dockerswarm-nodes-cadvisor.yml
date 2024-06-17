@@ -50,7 +50,7 @@ scrape_configs:
       # - dockerswarm_task_name
       # ================================================================================
 
-      # Set "task" label to "<service_name>_<task_slot>
+      # Set "task" label to "<service_name>.<task_slot>
       - source_labels:
         - dockerswarm_task_name
         target_label: task

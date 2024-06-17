@@ -159,7 +159,7 @@ scrape_configs:
         - __meta_dockerswarm_service_name
         - __meta_dockerswarm_task_slot
         target_label: task
-        separator: '_'
+        separator: '.'
 
       # Set "dockerswarm_task_name" label to "<service_name>.<task_slot>.<task_id>"
       - source_labels:
