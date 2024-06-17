@@ -141,6 +141,11 @@ scrape_configs:
         target_label: dockerswarm_task_name
         separator: '.'
 
+      # Simulate __meta_dockerswarm_task_port_publish_mode label
+      - source_labels:
+          - __meta_dockerswarm_task_port_publish_mode
+        target_label: dockerswarm_service_endpoint_port_publish_mode
+
       # ================================================================================
       # Kubernetes compatible relabeling
       # - namespace
