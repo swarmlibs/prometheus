@@ -51,15 +51,16 @@ scrape_configs:
         regex: 'true'
         action: drop
 
-      # Keep only tasks connected to the "dockerswarm_ingress" network
+      # Keep only services connected to the "dockerswarm_ingress" network
       - source_labels:
         - __meta_dockerswarm_network_name
         regex: 'dockerswarm_ingress'
         action: keep
 
       # ================================================================================
-      # Override prometheus and blackbox internal labels
+      # Override prometheus internal labels to configure blackbox
       # ================================================================================
+
       - source_labels: [__address__]
         target_label: __param_target
       - target_label: __address__
@@ -97,4 +98,3 @@ scrape_configs:
       - source_labels:
         - __meta_dockerswarm_service_name
         target_label: service
-        separator: '.'
