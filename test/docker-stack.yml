@@ -88,9 +88,7 @@ services:
           - node.role == manager
       labels:
         io.prometheus.role: "alertmanager"
-        io.prometheus.enabled: "true"
-        io.prometheus.job_name: "alertmanager"
-        io.prometheus.scrape_port: "9093"
+        io.prometheus.dockerswarm-tasks.should_be_scraped: "false"
         io.prometheus.dockerswarm-services.should_be_probed: "false"
     logging: *x-default-logging
     environment:
@@ -106,10 +104,9 @@ services:
       - published: 9093
         target: 9093
         mode: host
-    hostname: alertmanager.svc.cluster.local
+    hostname: alertmanager.{{.Node.ID}}.cluster.local
     networks:
-      dockerswarm_ingress:
-      dockerswarm_metrics:
+      prometheus_exporters:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
