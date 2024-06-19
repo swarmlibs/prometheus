@@ -21,3 +21,5 @@ COPY --from=prometheusbin /npm_licenses.tar.bz2 /npm_licenses.tar.bz2
 #     chown -R nobody:nobody /etc/prometheus /prometheus
 EXPOSE 9090/tcp
 VOLUME /prometheus/data
+
+VOLUME [ "/prometheus/data", "/prometheus-configs.d" ]

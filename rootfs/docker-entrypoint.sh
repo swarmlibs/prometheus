@@ -65,6 +65,9 @@ PROMETHEUS_SCRAPE_INTERVAL=${PROMETHEUS_SCRAPE_INTERVAL:-"15s"}
 PROMETHEUS_SCRAPE_TIMEOUT=${PROMETHEUS_SCRAPE_TIMEOUT:-"10s"}
 PROMETHEUS_EVALUATION_INTERVAL=${PROMETHEUS_EVALUATION_INTERVAL:-"15s"}
 
+# Prometheus dynamic scrape configuration directory
+PROMETHEUS_DYNAMIC_SRAPE_CONFIG_DIR=${PROMETHEUS_DYNAMIC_SRAPE_CONFIG_DIR:-"/prometheus-configs.d"}
+
 # Alertmanager configuration
 PROMETHEUS_ALERTMANAGER_SERVICE_NAME=${PROMETHEUS_ALERTMANAGER_SERVICE_NAME:-"alertmanager"}
 PROMETHEUS_ALERTMANAGER_SERVICE_PORT=${PROMETHEUS_ALERTMANAGER_SERVICE_PORT:-"9093"}
@@ -117,6 +120,7 @@ alerting:
 # Load scrape configs from this directory.
 scrape_config_files:
   - "/dockerswarm.d/*"
+  - "${PROMETHEUS_DYNAMIC_SRAPE_CONFIG_DIR}/*"
 
 # Make Prometheus scrape itself for metrics.
 scrape_configs:
@@ -159,6 +163,7 @@ if [ "$1" = "" ]; then
     set -- prometheus \
         --config.file="${PROMETHEUS_CONFIG_FILE}" \
         --storage.tsdb.path="${PROMETHEUS_TSDB_PATH}" \
+        --web.enable-lifecycle \
         --web.console.libraries=/usr/share/prometheus/console_libraries \
         --web.console.templates=/usr/share/prometheus/consoles \
         --log.level=info
