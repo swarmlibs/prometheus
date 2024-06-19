@@ -83,24 +83,9 @@ global:
   external_labels:
     __replica__: '${PROMETHEUS_CLUSTER_REPLICA}'
     cluster: '${PROMETHEUS_CLUSTER_NAME}'
-
-# ====================================================
-# Scrape configuration
-# ====================================================
-
-# Load scrape configs from this directory.
-scrape_config_files:
-  - "/dockerswarm/*"
-
-# Make Prometheus scrape itself for metrics.
-scrape_configs:
-  - job_name: 'prometheus'
-    file_sd_configs:
-      - files:
-        - /etc/prometheus/server.json
 EOF
 
-# Register cluster Alertmanager if the PROMETHEUS_CLUSTER_ALERTMANAGER variable is set.
+# If the user has provided the address of the Alertmanager, then configure the Alertmanager.
 PROMETHEUS_ALERTMANAGER_ADDR=${PROMETHEUS_ALERTMANAGER_ADDR}
 PROMETHEUS_ALERTMANAGER_PORT=${PROMETHEUS_ALERTMANAGER_PORT:-"9093"}
 
@@ -129,6 +114,25 @@ alerting:
       regex: __replica__
 EOF
 fi
+
+
+# Append the scrape configuration to the global configuration file.
+cat <<EOF >> "${PROMETHEUS_CONFIG_FILE}"
+# ====================================================
+# Scrape configuration
+# ====================================================
+
+# Load scrape configs from this directory.
+scrape_config_files:
+  - "/dockerswarm/*"
+
+# Make Prometheus scrape itself for metrics.
+scrape_configs:
+  - job_name: 'prometheus'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/server.json
+EOF
 
 echo "==> Generating the Prometheus self-discovery configuration file..."
 cat <<EOF >"/etc/prometheus/server.json"
