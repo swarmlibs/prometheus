@@ -65,6 +65,10 @@ PROMETHEUS_SCRAPE_INTERVAL=${PROMETHEUS_SCRAPE_INTERVAL:-"15s"}
 PROMETHEUS_SCRAPE_TIMEOUT=${PROMETHEUS_SCRAPE_TIMEOUT:-"10s"}
 PROMETHEUS_EVALUATION_INTERVAL=${PROMETHEUS_EVALUATION_INTERVAL:-"15s"}
 
+# Alertmanager configuration
+PROMETHEUS_ALERTMANAGER_SERVICE_NAME=${PROMETHEUS_ALERTMANAGER_SERVICE_NAME:-"alertmanager"}
+PROMETHEUS_ALERTMANAGER_SERVICE_PORT=${PROMETHEUS_ALERTMANAGER_SERVICE_PORT:-"9093"}
+
 echo "==> Generating the global configuration file..."
 cat <<EOF > "${PROMETHEUS_CONFIG_FILE}"
 # A scrape configuration for running Prometheus on a Docker Swarm cluster.
@@ -83,14 +87,7 @@ global:
   external_labels:
     __replica__: '${PROMETHEUS_CLUSTER_REPLICA}'
     cluster: '${PROMETHEUS_CLUSTER_NAME}'
-EOF
 
-# If the user has provided the address of the Alertmanager, then configure the Alertmanager.
-PROMETHEUS_ALERTMANAGER_ADDR=${PROMETHEUS_ALERTMANAGER_ADDR}
-PROMETHEUS_ALERTMANAGER_PORT=${PROMETHEUS_ALERTMANAGER_PORT:-"9093"}
-
-if [[ -n "${PROMETHEUS_ALERTMANAGER_ADDR}" ]]; then
-cat <<EOF >> "${PROMETHEUS_CONFIG_FILE}"
 # ====================================================
 # Alertmanager configuration
 # ====================================================
@@ -100,9 +97,9 @@ alerting:
   alertmanagers:
     - dns_sd_configs:
       - names:
-        - '${PROMETHEUS_ALERTMANAGER_ADDR}'
+        - 'tasks.${PROMETHEUS_ALERTMANAGER_SERVICE_NAME}'
         type: 'A'
-        port: ${PROMETHEUS_ALERTMANAGER_PORT}
+        port: ${PROMETHEUS_ALERTMANAGER_SERVICE_PORT}
         refresh_interval: 30s
 
   # All alerts sent to the Alertmanager will then also have different replica labels.
@@ -112,12 +109,7 @@ alerting:
   alert_relabel_configs:
     - action: labeldrop
       regex: __replica__
-EOF
-fi
 
-
-# Append the scrape configuration to the global configuration file.
-cat <<EOF >> "${PROMETHEUS_CONFIG_FILE}"
 # ====================================================
 # Scrape configuration
 # ====================================================
