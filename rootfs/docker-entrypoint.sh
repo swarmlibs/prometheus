@@ -84,6 +84,10 @@ global:
     __replica__: '${PROMETHEUS_CLUSTER_REPLICA}'
     cluster: '${PROMETHEUS_CLUSTER_NAME}'
 
+# ====================================================
+# Scrape configuration
+# ====================================================
+
 # Load scrape configs from this directory.
 scrape_config_files:
   - "/dockerswarm/*"
@@ -95,6 +99,36 @@ scrape_configs:
       - files:
         - /etc/prometheus/server.json
 EOF
+
+# Register cluster Alertmanager if the PROMETHEUS_CLUSTER_ALERTMANAGER variable is set.
+PROMETHEUS_ALERTMANAGER_ADDR=${PROMETHEUS_ALERTMANAGER_ADDR}
+PROMETHEUS_ALERTMANAGER_PORT=${PROMETHEUS_ALERTMANAGER_PORT:-"9093"}
+
+if [[ -n "${PROMETHEUS_ALERTMANAGER_ADDR}" ]]; then
+cat <<EOF >> "${PROMETHEUS_CONFIG_FILE}"
+# ====================================================
+# Alertmanager configuration
+# ====================================================
+
+# Local cluster alertmanager with DNS discovery
+alerting:
+  alertmanagers:
+    - dns_sd_configs:
+      - names:
+        - '${PROMETHEUS_ALERTMANAGER_ADDR}'
+        type: 'A'
+        port: ${PROMETHEUS_ALERTMANAGER_PORT}
+        refresh_interval: 30s
+
+  # All alerts sent to the Alertmanager will then also have different replica labels.
+  # Since the Alertmanager dedupes alerts based on identical label sets, 
+  # this deduplication will now break and you will get as many notifications as you have Prometheus server replicas!
+  # To avoid this, make sure that you drop the replica label on the alerting path using alert relabeling:
+  alert_relabel_configs:
+    - action: labeldrop
+      regex: __replica__
+EOF
+fi
 
 echo "==> Generating the Prometheus self-discovery configuration file..."
 cat <<EOF >"/etc/prometheus/server.json"
