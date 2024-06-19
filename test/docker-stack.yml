@@ -57,6 +57,7 @@ services:
       - DOCKERSWARM_TASK_SLOT={{.Task.Slot}}
       - DOCKERSWARM_STACK_NAMESPACE={{ index .Service.Labels "com.docker.stack.namespace"}}
 
+      # Cluster Alertmanager address
       - PROMETHEUS_ALERTMANAGER_ADDR=tasks.alertmanager
     ports:
       - published: 9090
