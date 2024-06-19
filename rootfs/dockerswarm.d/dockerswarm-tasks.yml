@@ -26,6 +26,18 @@ scrape_configs:
 
     relabel_configs:
       # ================================================================================
+      # Patching labels
+      # ================================================================================
+
+      # Fix "__meta_dockerswarm_task_slot" label for global tasks
+      - source_labels:
+        - __meta_dockerswarm_service_mode
+        - __meta_dockerswarm_node_id
+        target_label: __meta_dockerswarm_task_slot
+        separator: '/'
+        regex: global\/(.*)
+
+      # ================================================================================
       # Keep or drop targets with the following rules
       # ================================================================================
 
@@ -147,14 +159,6 @@ scrape_configs:
       # Docker Swarm compatible relabeling
       # - dockerswarm_task_name
       # ================================================================================
-
-      # Fix "__meta_dockerswarm_task_slot" label for global tasks
-      - source_labels:
-        - __meta_dockerswarm_service_mode
-        - __meta_dockerswarm_node_id
-        target_label: __meta_dockerswarm_task_slot
-        separator: '/'
-        regex: global\/(.*)
 
       # Set "task" label to "<service_name>_<task_slot>"
       - source_labels:
