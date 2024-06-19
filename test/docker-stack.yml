@@ -72,8 +72,8 @@ services:
       - prometheus-data:/prometheus/data
 
   # ====================================================
-  # Prometheus
-  # https://github.com/prometheus/prometheus
+  # Alertmanager
+  # https://github.com/prometheus/alertmanager
   # ====================================================
 
   alertmanager:
