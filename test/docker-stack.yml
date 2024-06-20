@@ -30,6 +30,9 @@ networks:
     name: prometheus_exporters
     external: true
 
+  prometheus:
+    internal: true
+
 services:
 
   # ====================================================
@@ -71,6 +74,7 @@ services:
       dockerswarm_ingress:
       dockerswarm_metrics:
       prometheus_exporters:
+      prometheus:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -101,6 +105,7 @@ services:
     logging: *x-default-logging
     networks:
       dockerswarm_metrics:
+      prometheus:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
