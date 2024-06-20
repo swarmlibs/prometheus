@@ -4,11 +4,6 @@ FROM prom/prometheus:$PROMETHEUS_VERSION AS prometheusbin
 
 FROM alpine:$ALPINE_VERSION
 
-RUN apk add --no-cache bash ca-certificates uuidgen
-ADD rootfs /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
-
 # Recreate original prometheus image
 COPY --from=prometheusbin /bin/prometheus /bin/prometheus
 COPY --from=prometheusbin /bin/promtool /bin/promtool
@@ -22,4 +17,8 @@ COPY --from=prometheusbin /npm_licenses.tar.bz2 /npm_licenses.tar.bz2
 EXPOSE 9090/tcp
 VOLUME /prometheus/data
 
+RUN apk add --no-cache bash ca-certificates uuidgen
+ADD rootfs /
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
 VOLUME [ "/prometheus/data", "/prometheus-configs.d" ]
