@@ -30,9 +30,6 @@ networks:
     name: prometheus_exporters
     external: true
 
-  prometheus:
-    internal: true
-
 services:
 
   # ====================================================
@@ -74,13 +71,19 @@ services:
       dockerswarm_ingress:
       dockerswarm_metrics:
       prometheus_exporters:
-      prometheus:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - prometheus-data:/prometheus/data
-      - prometheus-configs:/prometheus-configs.d
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: volume
+        source: prometheus-data
+        target: /prometheus/data
+      - type: volume
+        source: prometheus-configs
+        target: /prometheus-configs.d
 
   prometheus-config-reloader:
     image: quay.io/prometheus-operator/prometheus-config-reloader:v0.74.0
@@ -105,11 +108,12 @@ services:
     logging: *x-default-logging
     networks:
       dockerswarm_metrics:
-      prometheus:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - prometheus-configs:/prometheus-configs.d
+      - type: volume
+        source: prometheus-configs
+        target: /prometheus-configs.d
 
   # ====================================================
   # Alertmanager
@@ -148,7 +152,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - alertmanager-data:/alertmanager
+      - type: volume
+        source: alertmanager-data
+        target: /alertmanager
 
   alertmanager-config-reloader:
     image: quay.io/prometheus-operator/prometheus-config-reloader:v0.74.0
@@ -175,7 +181,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - alertmanager-configs:/alertmanager-configs.d
+      - type: volume
+        source: alertmanager-configs
+        target: /alertmanager-configs.d
 
   # ====================================================
   # Blackbox prober exporter
