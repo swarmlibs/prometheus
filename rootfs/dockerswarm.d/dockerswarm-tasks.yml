@@ -47,10 +47,10 @@ scrape_configs:
         regex: 'false'
         action: drop
 
-      # Keep only tasks connected to the "dockerswarm_metrics" network
+      # Keep only tasks connected to the "prometheus" network
       - source_labels:
         - __meta_dockerswarm_network_name
-        regex: (^dockerswarm_metrics$)
+        regex: (^prometheus$)
         action: keep
 
       # Only keep containers that should be running.
