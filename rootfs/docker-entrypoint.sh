@@ -61,9 +61,9 @@ PROMETHEUS_CLUSTER_REPLICA=${PROMETHEUS_CLUSTER_REPLICA:-${DOCKERSWARM_NODE_ID:-
 echo "==> Configure PROMETHEUS_CLUSTER_REPLICA as \"${PROMETHEUS_CLUSTER_REPLICA}\""
 
 # Generate the global configuration file.
-PROMETHEUS_SCRAPE_INTERVAL=${PROMETHEUS_SCRAPE_INTERVAL:-"15s"}
-PROMETHEUS_SCRAPE_TIMEOUT=${PROMETHEUS_SCRAPE_TIMEOUT:-"10s"}
-PROMETHEUS_EVALUATION_INTERVAL=${PROMETHEUS_EVALUATION_INTERVAL:-"15s"}
+PROMETHEUS_SCRAPE_INTERVAL=${PROMETHEUS_SCRAPE_INTERVAL:-"10s"}
+PROMETHEUS_SCRAPE_TIMEOUT=${PROMETHEUS_SCRAPE_TIMEOUT:-"5s"}
+PROMETHEUS_EVALUATION_INTERVAL=${PROMETHEUS_EVALUATION_INTERVAL:-"1m"}
 
 # Prometheus dynamic scrape configuration directory
 PROMETHEUS_DYNAMIC_SRAPE_CONFIG_DIR=${PROMETHEUS_DYNAMIC_SRAPE_CONFIG_DIR:-"/prometheus-configs.d"}
@@ -80,9 +80,9 @@ cat <<EOF > "${PROMETHEUS_CONFIG_FILE}"
 # Keep at most 50 sets of details of targets dropped by relabeling.
 # This information is used to display in the UI for troubleshooting.
 global:
-  scrape_interval: ${PROMETHEUS_SCRAPE_INTERVAL} # Set the scrape interval to every ${PROMETHEUS_SCRAPE_INTERVAL}. Default is every 15s. Prometheus default is 1 minute.
+  scrape_interval: ${PROMETHEUS_SCRAPE_INTERVAL} # Set the scrape interval to every ${PROMETHEUS_SCRAPE_INTERVAL}. Default is every 5s. Prometheus default is 1 minute.
   scrape_timeout: ${PROMETHEUS_SCRAPE_TIMEOUT} # scrape_timeout is set to the ${PROMETHEUS_SCRAPE_TIMEOUT}. The default is 10s. Prometheus default is 10s.
-  evaluation_interval: ${PROMETHEUS_EVALUATION_INTERVAL} # Evaluate rules every ${PROMETHEUS_EVALUATION_INTERVAL}. The default is every 15s. Prometheus default is 1 minute.
+  evaluation_interval: ${PROMETHEUS_EVALUATION_INTERVAL} # Evaluate rules every ${PROMETHEUS_EVALUATION_INTERVAL}. The default is 1 minute.
   keep_dropped_targets: 50
 
   # Attach these labels to any time series or alerts when communicating with
