@@ -92,6 +92,8 @@ services:
       - --watched-dir=/prometheus-configs.d
       - --reload-url=http://host.docker.internal:9090/-/reload
       - --runtimeinfo-url=http://host.docker.internal:9090/api/v1/status/runtimeinfo
+      - --watch-interval=15s
+      - --reload-timeout=10s
     deploy:
       mode: global
       resources: *x-exporter-resources-constraints
@@ -121,7 +123,7 @@ services:
   # ====================================================
 
   alertmanager:
-    image: swarmlibs/alertmanager:local
+    image: swarmlibs/alertmanager:main
     deploy:
       mode: global
       placement:
