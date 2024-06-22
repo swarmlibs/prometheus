@@ -16,7 +16,7 @@ networks:
   network_02:
 
 configs:
-  echo-scrape-config.yml:
-    file: test/configs/echo-scrape-config.yml
+  echo-scrape-config:
+    file: ./configs/echo-scrape-config.yml
     labels:
       - "io.prometheus.scrape_config=true"

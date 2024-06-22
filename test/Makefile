@@ -3,7 +3,7 @@ docker-stack-name = echo
 it:
 	@echo "make [deploy|remove|clean|reset] docker-stack-name=$(docker-stack-name)"
 
-deploy: networks
+deploy:
 	docker stack deploy -c docker-stack.yml $(docker-stack-name)
 
 remove:
