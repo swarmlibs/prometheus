@@ -1,4 +1,4 @@
-docker-stack-name = default_alertmanager
+docker-stack-name = promstack_alertmanager
 
 it:
 	@echo "make [deploy|remove|clean|reset] docker-stack-name=$(docker-stack-name)"
@@ -10,7 +10,10 @@ remove:
 	docker stack rm --detach=false $(docker-stack-name)
 
 clean:
-	@sleep 10
 	docker volume ls -q | grep $(docker-stack-name) | xargs docker volume rm
 
-reset: remove clean deploy
+reset: remove wait clean deploy
+
+wait:
+	@echo "Waiting for previous recipe to finish..."
+	@sleep 10
