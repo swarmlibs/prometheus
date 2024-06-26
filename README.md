@@ -14,7 +14,7 @@ The Prometheus monitoring system and time series database customized for Docker 
 ## How to use
 
 By design, the Prometheus server is configured to automatically discover and scrape the metrics from the Docker Swarm nodes, services and tasks.
-You can use Docker object labels in the `deploy` block to automagically register tasks as targets for Prometheus.
+You can use Docker object labels in the `deploy` block to automagically register services as targets for Prometheus.
 
 - `io.prometheus.enabled`: Enable the Prometheus scraping for the service.
 - `io.prometheus.job_name`: The Prometheus job name. Default is `<docker_stack_namespace>/<service_name|job_name>`.
@@ -30,12 +30,21 @@ You can use Docker object labels in the `deploy` block to automagically register
 services:
   my-app:
     # ...
+    networks:
+      prometheus:
     deploy:
       # ...
       labels:
         io.prometheus.enabled: "true"
         io.prometheus.job_name: "my-app"
         io.prometheus.scrape_port: "8080"
+
+# As limitations of the Docker Swarm, you need to attach the service to the prometheus network.
+# This is required to allow the Prometheus server to scrape the metrics.
+networks:
+  prometheus:
+    name: prometheus
+    external: true
 ```
 
 ## References
