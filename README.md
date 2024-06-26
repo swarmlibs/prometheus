@@ -28,13 +28,13 @@ You can use Docker object labels in the `deploy` block to automagically register
 ```yaml
 # Annotations:
 services:
-  app:
+  my-app:
     # ...
     deploy:
       # ...
       labels:
         io.prometheus.enabled: "true"
-        io.prometheus.job_name: "prometheus-config-reloader"
+        io.prometheus.job_name: "my-app"
         io.prometheus.scrape_port: "8080"
 ```
 
