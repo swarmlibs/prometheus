@@ -2,6 +2,8 @@
 
 The Prometheus monitoring system and time series database customized for Docker Swarm.
 
+![image](https://github.com/swarmlibs/prometheus/assets/4363857/935760e1-7493-40d0-acd7-8abae1b7ced8)
+
 ## Goals
 
 - A standard metrics labeling for Docker Swarm compatible scrape configs (i.e. nodes, services and tasks).
