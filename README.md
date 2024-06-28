@@ -8,7 +8,6 @@ The Prometheus monitoring system and time series database customized for Docker 
   <img src="https://github.com/swarmlibs/prometheus/assets/4363857/935760e1-7493-40d0-acd7-8abae1b7ced8">
 </picture>
 
-
 ## Goals
 
 - A standard metrics labeling for Docker Swarm compatible scrape configs (i.e. nodes, services and tasks).
@@ -24,6 +23,10 @@ The Prometheus monitoring system and time series database customized for Docker 
 The dynamic scrape configs are provided by the [swarmlibs/prometheus-configs-provider](https://github.com/swarmlibs/prometheus-configs-provider) service. And with the help of the [prometheus-operator/prometheus-operator/tree/main/cmd/prometheus-config-reloader](https://github.com/prometheus-operator/prometheus-operator/tree/main/cmd/prometheus-config-reloader) tool, we can automatically reload the Prometheus configuration when the Docker configs are create/update/remove.
 
 ## Deployment
+
+> [!NOTE]
+> It is recommended to use with Linux based host operating system.  
+> If you are testing it on macOS, please beware that some functionalities may limited.
 
 Please visit [swarmlibs/promstack](https://github.com/swarmlibs/promstack) for the deployment instructions.
 
@@ -75,6 +78,25 @@ Here is a list of Docker Service/Task labels that are mapped to Kubernetes label
 | `service`    | `__meta_dockerswarm_service_name`                             | `promstack/services-endpoints` |
 
 * **dockerswarm_task_name**: A combination of the service name, slot and task id.
+
+## Configure the Docker daemon
+
+To configure the Docker daemon as a Prometheus target, you need to specify the metrics-address in the daemon.json configuration file. This daemon expects the file to be located at one of the following locations by default. If the file doesn't exist, create it.
+
+* **Linux**: `/etc/docker/daemon.json`
+* **Docker Desktop**: Open the Docker Desktop settings and select Docker Engine to edit the file.
+
+Add the following configuration:
+
+```json
+{
+  "metrics-addr": "0.0.0.0:9323"
+}
+```
+
+Save the file, or in the case of Docker Desktop for Mac or Docker Desktop for Windows, save the configuration. Restart Docker.
+
+The Docker Engine now exposes Prometheus-compatible metrics on port `9323` on all interfaces. For more information on configuring the Docker daemon, see the [Docker documentation](https://docs.docker.com/config/daemon/prometheus/).
 
 ## References
 
