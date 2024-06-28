@@ -14,6 +14,10 @@ The Prometheus monitoring system and time series database customized for Docker 
 - Dynamically inject scrape configs from Docker configs.
 - Automatically reload the Prometheus configuration when the Docker configs are create/update/remove.
 
+## Deployment
+
+Please visit [swarmlibs/promstack](https://github.com/swarmlibs/promstack) for the deployment instructions.
+
 ## How to use
 
 By design, the Prometheus server is configured to automatically discover and scrape the metrics from the Docker Swarm nodes, services and tasks.
