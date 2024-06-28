@@ -7,9 +7,12 @@ The Prometheus monitoring system and time series database customized for Docker 
 - A standard metrics labeling for Docker Swarm compatible scrape configs (i.e. nodes, services and tasks).
 - Provide a Kubernetes compatible labels, this grant us the ability to reuse some of the already existing Grafana Dashboard already built for Kubernetes.
 
-## Deployment
+## Features
 
-> WIP
+- Automatically discover and scrape the metrics from the Docker Swarm nodes, services and tasks.
+- Ability to configure scrape target via Docker object labels.
+- Dynamically inject scrape configs from Docker configs.
+- Automatically reload the Prometheus configuration when the Docker configs are create/update/remove.
 
 ## How to use
 
@@ -46,6 +49,19 @@ networks:
     name: prometheus
     external: true
 ```
+
+## Prometheus Kubernetes compatible labels
+
+Here is a list of Docker Service/Task labels that are mapped to Kubernetes labels.
+
+| Kubernetes   | Docker                                                        | Scrape config                  |
+| ------------ | ------------------------------------------------------------- | ------------------------------ |
+| `namespace`  | `__meta_dockerswarm_service_label_com_docker_stack_namespace` |                                |
+| `deployment` | `__meta_dockerswarm_service_name`                             |                                |
+| `pod`        | `dockerswarm_task_name`                                       | `promstack/tasks`              |
+| `service`    | `__meta_dockerswarm_service_name`                             | `promstack/services-endpoints` |
+
+* **dockerswarm_task_name**: A combination of the service name, slot and task id.
 
 ## References
 
