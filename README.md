@@ -21,6 +21,8 @@ The Prometheus monitoring system and time series database customized for Docker 
 - Dynamically inject scrape configs from Docker configs.
 - Automatically reload the Prometheus configuration when the Docker configs are create/update/remove.
 
+See [swarmlibs/prometheus-configs-provider](https://github.com/swarmlibs/prometheus-configs-provider) and [prometheus-operator/prometheus-operator/tree/main/cmd/prometheus-config-reloader](https://github.com/prometheus-operator/prometheus-operator/tree/main/cmd/prometheus-config-reloader).
+
 ## Deployment
 
 Please visit [swarmlibs/promstack](https://github.com/swarmlibs/promstack) for the deployment instructions.
