@@ -28,7 +28,7 @@ scrape_configs:
 
     relabel_configs:
       - target_label: job
-        replacement: dockerswarm/services-endpoints
+        replacement: promstack/services-endpoints
       - target_label: module
         replacement: tcp_connect
 
