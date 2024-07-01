@@ -67,8 +67,8 @@ services:
         source: prometheus-configs
         target: /prometheus-configs.d
 
-  prometheus-configs-provider:
-    image: swarmlibs/prometheus-configs-provider:main
+  prometheus-config-provider:
+    image: swarmlibs/prometheus-config-provider:main
     command:
       - --output-dir=/prometheus-configs.d
     deploy:
@@ -79,7 +79,7 @@ services:
         constraints:
           - node.role == manager
       labels:
-        io.prometheus.role: "prometheus-configs-provider"
+        io.prometheus.role: "prometheus-config-provider"
     logging: *x-default-logging
     networks:
       prometheus_internal:
