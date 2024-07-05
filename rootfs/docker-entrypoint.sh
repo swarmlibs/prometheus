@@ -119,7 +119,7 @@ alerting:
 
 # Load scrape configs from this directory.
 scrape_config_files:
-  - "/dockerswarm.d/*"
+  - "/etc/prometheus/scrape-configs/*"
   - "${PROMETHEUS_DYNAMIC_SRAPE_CONFIG_DIR}/*"
 
 # Make Prometheus scrape itself for metrics.
