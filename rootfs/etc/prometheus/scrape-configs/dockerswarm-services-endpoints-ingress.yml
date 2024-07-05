@@ -51,10 +51,10 @@ scrape_configs:
         regex: 'true'
         action: drop
 
-      # Keep only services connected to the "dockerswarm_ingress" network
+      # Keep only services connected to the "public" network
       - source_labels:
         - __meta_dockerswarm_network_name
-        regex: 'dockerswarm_ingress'
+        regex: 'public'
         action: keep
 
       # ================================================================================

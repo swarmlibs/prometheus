@@ -146,7 +146,7 @@ services:
       prometheus_internal:
       prometheus_gwnetwork:
       prometheus:
-      dockerswarm_ingress:
+      public:
 
 volumes:
   prometheus-data:
@@ -161,6 +161,6 @@ networks:
   prometheus:
     name: prometheus
     external: true
-  dockerswarm_ingress:
-    name: dockerswarm_ingress
+  public:
+    name: public
     external: true
