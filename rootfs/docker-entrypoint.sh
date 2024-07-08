@@ -39,7 +39,7 @@ fi
 
 # Prometheus configuration file.
 PROMETHEUS_TSDB_PATH=${PROMETHEUS_TSDB_PATH:-"/prometheus/data"}
-PROMETHEUS_CONFIG_FILE=${PROMETHEUS_CONFIG_FILE:-"/etc/prometheus/prometheus.yml"}
+PROMETHEUS_CONFIG_FILE=${PROMETHEUS_CONFIG_FILE:-"/etc/prometheus/prometheus.yaml"}
 
 # Create the directory for the configuration parts.
 mkdir -p $(dirname ${PROMETHEUS_CONFIG_FILE})
@@ -73,62 +73,9 @@ PROMETHEUS_ALERTMANAGER_SERVICE_NAME=${PROMETHEUS_ALERTMANAGER_SERVICE_NAME:-"al
 PROMETHEUS_ALERTMANAGER_SERVICE_PORT=${PROMETHEUS_ALERTMANAGER_SERVICE_PORT:-"9093"}
 
 echo "==> Generating the global configuration file..."
-cat <<EOF > "${PROMETHEUS_CONFIG_FILE}"
-# A scrape configuration for running Prometheus on a Docker Swarm cluster.
-# This uses separate scrape configs for cluster components (i.e. nodes, services, tasks).
-# 
-# Keep at most 50 sets of details of targets dropped by relabeling.
-# This information is used to display in the UI for troubleshooting.
-global:
-  scrape_interval: ${PROMETHEUS_SCRAPE_INTERVAL} # Set the scrape interval to every ${PROMETHEUS_SCRAPE_INTERVAL}. Default is every 5s. Prometheus default is 1 minute.
-  scrape_timeout: ${PROMETHEUS_SCRAPE_TIMEOUT} # scrape_timeout is set to the ${PROMETHEUS_SCRAPE_TIMEOUT}. The default is 10s. Prometheus default is 10s.
-  evaluation_interval: ${PROMETHEUS_EVALUATION_INTERVAL} # Evaluate rules every ${PROMETHEUS_EVALUATION_INTERVAL}. The default is 1 minute.
-  keep_dropped_targets: 50
-
-  # Attach these labels to any time series or alerts when communicating with
-  # external systems (federation, remote storage, Alertmanager).
-  external_labels:
-    __replica__: '${PROMETHEUS_CLUSTER_REPLICA}'
-    cluster: '${PROMETHEUS_CLUSTER_NAME}'
-
-# ====================================================
-# Alertmanager configuration
-# ====================================================
-
-# Local cluster alertmanager with DNS discovery
-alerting:
-  alertmanagers:
-    - dns_sd_configs:
-      - names:
-        - 'tasks.${PROMETHEUS_ALERTMANAGER_SERVICE_NAME}'
-        type: 'A'
-        port: ${PROMETHEUS_ALERTMANAGER_SERVICE_PORT}
-        refresh_interval: 30s
-
-  # All alerts sent to the Alertmanager will then also have different replica labels.
-  # Since the Alertmanager dedupes alerts based on identical label sets, 
-  # this deduplication will now break and you will get as many notifications as you have Prometheus server replicas!
-  # To avoid this, make sure that you drop the replica label on the alerting path using alert relabeling:
-  alert_relabel_configs:
-    - action: labeldrop
-      regex: __replica__
-
-# ====================================================
-# Scrape configuration
-# ====================================================
-
-# Load scrape configs from this directory.
-scrape_config_files:
-  - "/etc/prometheus/scrape-configs/*"
-  - "${PROMETHEUS_DYNAMIC_SRAPE_CONFIG_DIR}/*"
-
-# Make Prometheus scrape itself for metrics.
-scrape_configs:
-  - job_name: 'prometheus'
-    file_sd_configs:
-      - files:
-        - /etc/prometheus/server.json
-EOF
+GOMPLATE_LOG_FORMAT=logfmt gomplate --verbose \
+  --file=/etc/prometheus/prometheus.yaml.tmpl \
+  --out=${PROMETHEUS_CONFIG_FILE}
 
 echo "==> Generating the Prometheus self-discovery configuration file..."
 cat <<EOF >"/etc/prometheus/server.json"
