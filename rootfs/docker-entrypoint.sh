@@ -82,7 +82,7 @@ cat <<EOF >"/etc/prometheus/server.json"
 [
   {
     "targets": [
-      "localhost:9090"
+      "127.0.0.1:9090"
     ],
     "labels": {
       "dockerswarm_service_id": "${DOCKERSWARM_SERVICE_ID}",
