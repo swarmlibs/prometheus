@@ -24,9 +24,6 @@ scrape_configs:
         role: services
 
     relabel_configs:
-      - target_label: job
-        replacement: dockerswarm/services-endpoints
-
       - target_label: module
         replacement: tcp_connect
 
@@ -64,7 +61,7 @@ scrape_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - target_label: __address__
-        replacement: tasks.blackbox-exporter.svc.cluster.local:9115
+        replacement: tasks.blackbox-exporter.local:9115
       - source_labels: [__param_target]
         target_label: instance
 
